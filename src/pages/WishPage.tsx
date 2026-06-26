@@ -10,20 +10,21 @@ import type { Book } from "@/types/book";
 const PAGE_SIZE = 10;
 
 export default function WishPage() {
-  const [favoriteBooks, setFavoriteBooks] =
-    useState<Book[]>(getFavoriteBooks);
+  const [favoriteBooks, setFavoriteBooks] = useState<Book[]>(getFavoriteBooks);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const visibleBooks = useMemo(
     () => favoriteBooks.slice(0, visibleCount),
-    [favoriteBooks, visibleCount],
+    [favoriteBooks, visibleCount]
   );
 
   const handleFavoriteChange = (book: Book, isFavorite: boolean) => {
     if (isFavorite) return;
 
     setFavoriteBooks((prevFavoriteBooks) =>
-      prevFavoriteBooks.filter((favoriteBook) => favoriteBook.isbn !== book.isbn),
+      prevFavoriteBooks.filter(
+        (favoriteBook) => favoriteBook.isbn !== book.isbn
+      )
     );
   };
 

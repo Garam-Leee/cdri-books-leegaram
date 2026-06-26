@@ -41,7 +41,7 @@ const Container = styled.div<{ isHistoryOpen: boolean }>(
     padding: "10px 10px 10px 48px",
     borderRadius: isHistoryOpen ? "22px 22px 0 0" : "22px",
     backgroundColor: theme.colors.palette.lightGray,
-  }),
+  })
 );
 
 const IconWrap = styled.div`
