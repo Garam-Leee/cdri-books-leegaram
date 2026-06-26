@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 import ArrowDownIcon from "@/assets/icons/ic-arrow-down.svg";
@@ -48,7 +49,12 @@ export default function BookCard({ book, onFavoriteChange }: BookCardProps) {
   };
 
   return (
-    <Item isOpen={isOpen}>
+    <Item 
+      isOpen={isOpen}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
       <LeftArea isOpen={isOpen}>
         <ThumbnailArea>
           <Thumbnail
@@ -109,13 +115,21 @@ export default function BookCard({ book, onFavoriteChange }: BookCardProps) {
         </PriceArea>
 
         <ButtonArea isOpen={isOpen}>
-          <BuyButton type="button" isOpen={isOpen} onClick={handleBuyClick}>
+          <BuyButton 
+            type="button" 
+            isOpen={isOpen} 
+            onClick={handleBuyClick}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.12 }}
+          >
             구매하기
           </BuyButton>
 
           <DetailButton
             type="button"
             onClick={() => setIsOpen((prev) => !prev)}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.12 }}
           >
             <DetailButtonContent>
               상세보기
@@ -141,7 +155,7 @@ const getFavoriteBooks = () => {
 const isFavoriteBook = (book: Book) =>
   getFavoriteBooks().some((favoriteBook) => favoriteBook.isbn === book.isbn);
 
-const Item = styled.li<{ isOpen: boolean }>(({ theme, isOpen }) => ({
+const Item = styled(motion.li)<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   width: "960px",
   height: isOpen ? "344px" : "100px",
   display: "flex",
@@ -150,6 +164,7 @@ const Item = styled.li<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   marginTop: "9px",
   padding: isOpen ? "24px 16px 40px 48px" : "0 16px 0 48px",
   borderBottom: `1px solid ${theme.colors.palette.gray}`,
+  transition: "height 0.18s ease-out, padding 0.18s ease-out",
 }));
 
 const LeftArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
@@ -289,7 +304,7 @@ const ButtonArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
   gap: isOpen ? 0 : "8px",
 }));
 
-const BuyButton = styled.button<{ isOpen: boolean }>(({ theme, isOpen }) => ({
+const BuyButton = styled(motion.button)<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   width: isOpen ? "240px" : "115px",
   height: "48px",
   display: "flex",
@@ -301,7 +316,7 @@ const BuyButton = styled.button<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   ...theme.typography.body2Bold,
 }));
 
-const DetailButton = styled.button(({ theme }) => ({
+const DetailButton = styled(motion.button)(({ theme }) => ({
   width: "115px",
   height: "48px",
   display: "flex",

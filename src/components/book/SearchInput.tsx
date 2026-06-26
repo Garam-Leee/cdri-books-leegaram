@@ -24,7 +24,7 @@ export default function SearchInput({
       <Input
         type="text"
         value={value}
-        placeholder="검색어를 입력하세요"
+        placeholder="검색어 입력"
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter") onEnter();

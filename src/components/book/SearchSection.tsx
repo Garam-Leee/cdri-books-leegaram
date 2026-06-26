@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
 import SearchDetail from "@/components/book/SearchDetail";
@@ -30,7 +31,7 @@ export default function SearchSection({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [detailKeyword, setDetailKeyword] = useState("");
   const [searchTarget, setSearchTarget] = useState<SearchTarget>(
-    SEARCH_TARGET_OPTIONS[0].value
+    SEARCH_TARGET_OPTIONS[0].value,
   );
 
   const isHistoryOpen = isFocused && histories.length > 0;
@@ -47,7 +48,7 @@ export default function SearchSection({
     setHistories(nextHistories);
     localStorage.setItem(
       SEARCH_HISTORY_STORAGE_KEY,
-      JSON.stringify(nextHistories)
+      JSON.stringify(nextHistories),
     );
   };
 
@@ -107,33 +108,40 @@ export default function SearchSection({
             isHistoryOpen={isHistoryOpen}
           />
 
-          {isHistoryOpen && (
-            <SearchHistory
-              histories={histories}
-              setHistories={setHistories}
-              onSelect={handleSelectHistory}
-            />
-          )}
+          <AnimatePresence>
+            {isHistoryOpen && (
+              <SearchHistory
+                histories={histories}
+                setHistories={setHistories}
+                onSelect={handleSelectHistory}
+              />
+            )}
+          </AnimatePresence>
         </InputArea>
 
         <DetailArea>
           <DetailButton
             type="button"
+            aria-expanded={isDetailOpen}
             onClick={() => setIsDetailOpen((prev) => !prev)}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
           >
             상세검색
           </DetailButton>
 
-          {isDetailOpen && (
-            <SearchDetail
-              keyword={detailKeyword}
-              target={searchTarget}
-              onChangeKeyword={setDetailKeyword}
-              onChangeTarget={setSearchTarget}
-              onSearch={handleDetailSearch}
-              onClose={handleCloseDetail}
-            />
-          )}
+          <AnimatePresence>
+            {isDetailOpen && (
+              <SearchDetail
+                keyword={detailKeyword}
+                target={searchTarget}
+                onChangeKeyword={setDetailKeyword}
+                onChangeTarget={setSearchTarget}
+                onSearch={handleDetailSearch}
+                onClose={handleCloseDetail}
+              />
+            )}
+          </AnimatePresence>
         </DetailArea>
       </SearchBox>
     </Container>
@@ -160,7 +168,7 @@ const DetailArea = styled.div`
   position: relative;
 `;
 
-const DetailButton = styled.button(({ theme }) => ({
+const DetailButton = styled(motion.button)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -180,7 +188,9 @@ const DetailButton = styled.button(({ theme }) => ({
     backgroundColor: "rgba(72, 128, 238, 0.06)",
   },
 
-  "&:active": {
-    transform: "translateY(1px)",
+  '&[aria-expanded="true"]': {
+    borderColor: theme.colors.palette.primary,
+    color: theme.colors.palette.primary,
+    backgroundColor: "rgba(72, 128, 238, 0.06)",
   },
 }));
