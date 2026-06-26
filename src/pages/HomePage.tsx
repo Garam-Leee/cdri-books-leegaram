@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
- 
+import { useSearchParams } from "react-router-dom";
+
+import { getBookSearchErrorMessage } from "@/api/error";
 import BookList from "@/components/book/BookList";
 import SearchSection from "@/components/book/SearchSection";
 import BookCardSkeleton from "@/components/book/skeleton/BookCardSkeleton";
@@ -10,16 +12,28 @@ import useInfiniteBookSearchQuery from "@/hooks/useInfiniteBookSearchQuery";
 import AppLayout from "@/layouts/AppLayout";
 import type { SearchTarget } from "@/types/search";
 
+const isValidSearchTarget = (target: string | null): target is SearchTarget => {
+  return target === "title" || target === "person" || target === "publisher";
+};
+
 export default function HomePage() {
-  const [keyword, setKeyword] = useState("");
-  const [submittedKeyword, setSubmittedKeyword] = useState("");
-  const [target, setTarget] = useState<SearchTarget | undefined>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialQuery = searchParams.get("query") ?? "";
+  const initialTarget = searchParams.get("target");
+
+  const [keyword, setKeyword] = useState(initialQuery);
+  const [submittedKeyword, setSubmittedKeyword] = useState(initialQuery);
+  const [target, setTarget] = useState<SearchTarget | undefined>(
+    isValidSearchTarget(initialTarget) ? initialTarget : undefined,
+  );
 
   const {
     data,
     error,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     isLoading,
   } = useInfiniteBookSearchQuery({
@@ -28,28 +42,55 @@ export default function HomePage() {
   });
 
   const books = data?.pages.flatMap((page) => page.documents) ?? [];
-  const totalCount = data?.pages[0]?.meta.total_count ?? 0;
+  const totalCount = error ? 0 : (data?.pages[0]?.meta.total_count ?? 0);
+  const isInitialLoading = isLoading || (isFetching && books.length === 0);
+
+  const handleSearch = ({
+    keyword,
+    target,
+  }: {
+    keyword: string;
+    target?: SearchTarget;
+  }) => {
+    const trimmedKeyword = keyword.trim();
+    if (!trimmedKeyword) return;
+
+    setSubmittedKeyword(trimmedKeyword);
+    setTarget(target);
+
+    const nextParams = new URLSearchParams();
+    nextParams.set("query", trimmedKeyword);
+
+    if (target) {
+      nextParams.set("target", target);
+    }
+
+    setSearchParams(nextParams);
+  };
+
+  const hasSearched = submittedKeyword.trim().length > 0;
 
   return (
     <AppLayout title={NAV_ITEMS.search.name}>
       <SearchSection
         keyword={keyword}
         onChangeKeyword={setKeyword}
-        onSearch={({ keyword, target }) => {
-          setSubmittedKeyword(keyword);
-          setTarget(target);
-        }}
+        onSearch={handleSearch}
       />
 
-      <ResultCount>
-        도서 검색 결과 &nbsp;&nbsp; 총 <Count>{totalCount}</Count>건
-      </ResultCount>
+      {hasSearched && (
+        <ResultCount>
+          도서 검색 결과 &nbsp;&nbsp; 총 <Count>{totalCount}</Count>건
+        </ResultCount>
+      )}
 
-      {isLoading && <BookCardSkeleton count={10} />}
+      {hasSearched && isInitialLoading && <BookCardSkeleton count={10} />}
 
-      {error && <ErrorStatus text="도서 검색 중 오류가 발생했습니다." />}
+      {hasSearched && !isInitialLoading && error && (
+        <ErrorStatus text={getBookSearchErrorMessage(error)} />
+      )}
 
-      {!isLoading && !error && (
+      {hasSearched && !isInitialLoading && !error && (
         <BookList
           books={books}
           hasMore={!!hasNextPage && !isFetchingNextPage}
