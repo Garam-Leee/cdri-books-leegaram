@@ -10,11 +10,20 @@ export default function GlobalStyle() {
           box-sizing: border-box;
         }
 
+        *::before,
+        *::after {
+          box-sizing: border-box;
+        }
+
         html,
         body,
         #root {
           width: 100%;
           min-height: 100vh;
+        }
+
+        html {
+          overflow-y: scroll;
         }
 
         body {
@@ -28,10 +37,46 @@ export default function GlobalStyle() {
           text-decoration: none;
         }
 
+        button,
+        input,
+        select,
+        textarea {
+          all: unset;
+          appearance: none;
+          -webkit-appearance: none;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          box-sizing: border-box;
+          font: inherit;
+          color: inherit;
+        }
+
         button {
-          border: none;
-          background: none;
           cursor: pointer;
+        }
+
+        button:disabled {
+          cursor: not-allowed;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+          opacity: 1;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible,
+        a:focus-visible {
+          outline: 2px solid ${theme.colors.palette.primary};
+          outline-offset: 3px;
+        }
+
+        img {
+          display: block;
+          max-width: 100%;
         }
 
         ul,
