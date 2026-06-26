@@ -24,7 +24,7 @@ export default function SearchInput({
       <Input
         type="text"
         value={value}
-        placeholder="검색어를 입력하세요"
+        placeholder="검색어 입력"
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter") onEnter();
@@ -37,7 +37,8 @@ export default function SearchInput({
 const Container = styled.div<{ isHistoryOpen: boolean }>(
   ({ theme, isHistoryOpen }) => ({
     position: "relative",
-    width: "480px",
+    width: "100%",
+    maxWidth: "480px",
     padding: "10px 10px 10px 48px",
     borderRadius: isHistoryOpen ? "22px 22px 0 0" : "22px",
     backgroundColor: theme.colors.palette.lightGray,

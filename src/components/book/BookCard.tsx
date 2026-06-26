@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 import ArrowDownIcon from "@/assets/icons/ic-arrow-down.svg";
@@ -48,7 +49,12 @@ export default function BookCard({ book, onFavoriteChange }: BookCardProps) {
   };
 
   return (
-    <Item isOpen={isOpen}>
+    <Item 
+      isOpen={isOpen}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
       <LeftArea isOpen={isOpen}>
         <ThumbnailArea>
           <Thumbnail
@@ -109,13 +115,21 @@ export default function BookCard({ book, onFavoriteChange }: BookCardProps) {
         </PriceArea>
 
         <ButtonArea isOpen={isOpen}>
-          <BuyButton type="button" isOpen={isOpen} onClick={handleBuyClick}>
+          <BuyButton 
+            type="button" 
+            isOpen={isOpen} 
+            onClick={handleBuyClick}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.12 }}
+          >
             구매하기
           </BuyButton>
 
           <DetailButton
             type="button"
             onClick={() => setIsOpen((prev) => !prev)}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.12 }}
           >
             <DetailButtonContent>
               상세보기
@@ -141,8 +155,9 @@ const getFavoriteBooks = () => {
 const isFavoriteBook = (book: Book) =>
   getFavoriteBooks().some((favoriteBook) => favoriteBook.isbn === book.isbn);
 
-const Item = styled.li<{ isOpen: boolean }>(({ theme, isOpen }) => ({
-  width: "960px",
+const Item = styled(motion.li)<{ isOpen: boolean }>(({ theme, isOpen }) => ({
+  width: "100%",
+  maxWidth: "960px",
   height: isOpen ? "344px" : "100px",
   display: "flex",
   justifyContent: "space-between",
@@ -150,6 +165,19 @@ const Item = styled.li<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   marginTop: "9px",
   padding: isOpen ? "24px 16px 40px 48px" : "0 16px 0 48px",
   borderBottom: `1px solid ${theme.colors.palette.gray}`,
+  transition: "height 0.18s ease-out, padding 0.18s ease-out",
+
+  "@media (max-width: 768px)": {
+    gap: "24px",
+    padding: isOpen ? "16px 12px 24px 24px" : "0 12px 0 24px",
+    height: isOpen ? "auto" : "100px",
+  },
+
+  "@media (max-width: 480px)": {
+    gap: "16px",
+    padding: isOpen ? "12px 8px 16px 16px" : "0 8px 0 16px",
+    flexWrap: "wrap",
+  },
 }));
 
 const LeftArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
@@ -191,6 +219,14 @@ const Info = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
   flexDirection: "column",
   justifyContent: isOpen ? "flex-start" : "center",
   minWidth: 0,
+
+  "@media (max-width: 768px)": {
+    marginLeft: isOpen ? "16px" : "24px",
+  },
+
+  "@media (max-width: 480px)": {
+    marginLeft: isOpen ? "8px" : "12px",
+  },
 }));
 
 const TitleRow = styled.div`
@@ -206,13 +242,27 @@ const Title = styled.p(({ theme }) => ({
   textOverflow: "ellipsis",
   color: theme.colors.text.primary,
   ...theme.typography.title3,
+
+  "@media (max-width: 768px)": {
+    maxWidth: "180px",
+  },
+
+  "@media (max-width: 480px)": {
+    maxWidth: "120px",
+  },
 }));
 
 const Authors = styled.p(({ theme }) => ({
   marginLeft: "16px",
   color: theme.colors.text.subtitle,
   whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
   ...theme.typography.body2,
+
+  "@media (max-width: 480px)": {
+    display: "none",
+  },
 }));
 
 const Description = styled.div`
@@ -227,6 +277,7 @@ const DescriptionTitle = styled.p(({ theme }) => ({
 
 const DescriptionContent = styled.div(({ theme }) => ({
   width: "360px",
+  maxWidth: "100%",
   display: "flex",
   flexDirection: "column",
   gap: "8px",
@@ -240,6 +291,13 @@ const RightArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
   flexDirection: isOpen ? "column" : "row",
   alignItems: isOpen ? "flex-end" : "center",
   flexShrink: 0,
+
+  "@media (max-width: 480px)": {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+  },
 }));
 
 const PriceArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
@@ -287,9 +345,19 @@ const ButtonArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
   alignItems: isOpen ? "flex-end" : "center",
   justifyContent: isOpen ? "space-between" : "flex-start",
   gap: isOpen ? 0 : "8px",
+
+  "@media (max-width: 768px)": {
+    flexWrap: "wrap",
+    gap: "8px",
+  },
+
+  "@media (max-width: 480px)": {
+    width: "100%",
+    justifyContent: "space-between",
+  },
 }));
 
-const BuyButton = styled.button<{ isOpen: boolean }>(({ theme, isOpen }) => ({
+const BuyButton = styled(motion.button)<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   width: isOpen ? "240px" : "115px",
   height: "48px",
   display: "flex",
@@ -301,7 +369,7 @@ const BuyButton = styled.button<{ isOpen: boolean }>(({ theme, isOpen }) => ({
   ...theme.typography.body2Bold,
 }));
 
-const DetailButton = styled.button(({ theme }) => ({
+const DetailButton = styled(motion.button)(({ theme }) => ({
   width: "115px",
   height: "48px",
   display: "flex",

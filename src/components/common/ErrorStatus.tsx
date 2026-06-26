@@ -15,10 +15,11 @@ export default function ErrorStatus({
 }
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 0;
+  padding: 80px 16px;
 `;
 
 const Text = styled.p(({ theme }) => ({
