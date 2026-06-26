@@ -30,7 +30,7 @@ export default function SearchSection({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [detailKeyword, setDetailKeyword] = useState("");
   const [searchTarget, setSearchTarget] = useState<SearchTarget>(
-    SEARCH_TARGET_OPTIONS[0].value,
+    SEARCH_TARGET_OPTIONS[0].value
   );
 
   const isHistoryOpen = isFocused && histories.length > 0;
@@ -47,7 +47,7 @@ export default function SearchSection({
     setHistories(nextHistories);
     localStorage.setItem(
       SEARCH_HISTORY_STORAGE_KEY,
-      JSON.stringify(nextHistories),
+      JSON.stringify(nextHistories)
     );
   };
 
@@ -170,7 +170,8 @@ const DetailButton = styled.button(({ theme }) => ({
   backgroundColor: "transparent",
   color: theme.colors.text.subtitle,
   whiteSpace: "nowrap",
-  transition: "border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease",
+  transition:
+    "border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease",
   ...theme.typography.body2,
 
   "&:hover": {

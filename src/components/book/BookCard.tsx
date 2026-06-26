@@ -33,14 +33,14 @@ export default function BookCard({ book, onFavoriteChange }: BookCardProps) {
       ? [
           book,
           ...favoriteBooks.filter(
-            (favoriteBook) => favoriteBook.isbn !== book.isbn,
+            (favoriteBook) => favoriteBook.isbn !== book.isbn
           ),
         ]
       : favoriteBooks.filter((favoriteBook) => favoriteBook.isbn !== book.isbn);
 
     localStorage.setItem(
       STORAGE_KEYS.FAVORITE_BOOKS,
-      JSON.stringify(nextFavoriteBooks),
+      JSON.stringify(nextFavoriteBooks)
     );
 
     setIsFavorite(nextIsFavorite);
@@ -113,7 +113,10 @@ export default function BookCard({ book, onFavoriteChange }: BookCardProps) {
             구매하기
           </BuyButton>
 
-          <DetailButton type="button" onClick={() => setIsOpen((prev) => !prev)}>
+          <DetailButton
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
             <DetailButtonContent>
               상세보기
               <ArrowIcon

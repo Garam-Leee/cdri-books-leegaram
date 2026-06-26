@@ -16,7 +16,7 @@ export default function SearchHistory({
 }: SearchHistoryProps) {
   const handleDelete = (
     event: React.MouseEvent<HTMLButtonElement>,
-    keyword: string,
+    keyword: string
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -26,7 +26,7 @@ export default function SearchHistory({
     setHistories(nextHistories);
     localStorage.setItem(
       SEARCH_HISTORY_STORAGE_KEY,
-      JSON.stringify(nextHistories),
+      JSON.stringify(nextHistories)
     );
   };
 

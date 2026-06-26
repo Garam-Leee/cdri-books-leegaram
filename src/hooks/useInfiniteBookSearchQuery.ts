@@ -14,8 +14,7 @@ export default function useInfiniteBookSearchQuery({
 }: UseInfiniteBookSearchQueryParams) {
   return useInfiniteQuery({
     queryKey: ["books", query, target],
-    queryFn: ({ pageParam }) =>
-      searchBooks({ query, page: pageParam, target }),
+    queryFn: ({ pageParam }) => searchBooks({ query, page: pageParam, target }),
     enabled: query.trim().length > 0,
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
