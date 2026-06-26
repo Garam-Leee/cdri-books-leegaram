@@ -15,11 +15,12 @@ export default function EmptyStatus({ icon, text }: EmptyStatusProps) {
 }
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 0;
+  padding: 80px 16px;
 `;
 
 const Icon = styled.img`

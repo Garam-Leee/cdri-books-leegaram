@@ -37,7 +37,8 @@ export default function SearchInput({
 const Container = styled.div<{ isHistoryOpen: boolean }>(
   ({ theme, isHistoryOpen }) => ({
     position: "relative",
-    width: "480px",
+    width: "100%",
+    maxWidth: "480px",
     padding: "10px 10px 10px 48px",
     borderRadius: isHistoryOpen ? "22px 22px 0 0" : "22px",
     backgroundColor: theme.colors.palette.lightGray,

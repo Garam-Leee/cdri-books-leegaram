@@ -30,6 +30,12 @@ const Container = styled.header`
   display: flex;
   align-items: center;
   padding: 24px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
 `;
 
 const Title = styled.h1(({ theme }) => ({
@@ -42,6 +48,17 @@ const Navigation = styled.nav`
   gap: 56px;
   margin: 0 auto;
   transform: translateX(-200px);
+
+  @media (max-width: 960px) {
+    transform: none;
+    margin: 0;
+    margin-left: auto;
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    gap: 24px;
+  }
 `;
 
 const NavItem = styled.div``;
