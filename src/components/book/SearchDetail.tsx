@@ -143,6 +143,7 @@ export default function SearchDetail({
 const PopupRoot = styled(motion.div)(({ theme }) => ({
   zIndex: 30,
   width: "360px",
+  maxWidth: "calc(100vw - 32px)",
   left: "50%",
   display: "grid",
   marginLeft: "-180px",
@@ -152,6 +153,12 @@ const PopupRoot = styled(motion.div)(({ theme }) => ({
   borderRadius: "8px",
   backgroundColor: theme.colors.palette.white,
   boxShadow: "0 4px 14px 6px rgba(151, 151, 151, 0.15)",
+
+  "@media (max-width: 480px)": {
+    left: "0",
+    marginLeft: "0",
+    transform: "none",
+  },
 }));
 
 const CloseButton = styled.button({

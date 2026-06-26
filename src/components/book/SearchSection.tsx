@@ -150,6 +150,7 @@ export default function SearchSection({
 
 const Container = styled.section`
   width: 568px;
+  max-width: 100%;
   padding-bottom: 20px;
 `;
 
@@ -157,15 +158,29 @@ const SearchBox = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 const InputArea = styled.div`
   position: relative;
   width: 480px;
+  max-width: 100%;
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const DetailArea = styled.div`
   position: relative;
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const DetailButton = styled(motion.button)(({ theme }) => ({

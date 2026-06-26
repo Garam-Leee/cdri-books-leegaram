@@ -75,6 +75,7 @@ export default function BookList({
 const List = styled(motion.ul)`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const ObservedArea = styled.div`
