@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
-
+ 
 import BookList from "@/components/book/BookList";
 import SearchSection from "@/components/book/SearchSection";
-import { ErrorStatus, LoadingStatus } from "@/components/common";
+import BookCardSkeleton from "@/components/book/skeleton/BookCardSkeleton";
+import { ErrorStatus } from "@/components/common";
 import { NAV_ITEMS } from "@/constants/nav";
 import useInfiniteBookSearchQuery from "@/hooks/useInfiniteBookSearchQuery";
 import AppLayout from "@/layouts/AppLayout";
@@ -44,7 +45,7 @@ export default function HomePage() {
         도서 검색 결과 &nbsp;&nbsp; 총 <Count>{totalCount}</Count>건
       </ResultCount>
 
-      {isLoading && <LoadingStatus />}
+      {isLoading && <BookCardSkeleton count={10} />}
 
       {error && <ErrorStatus text="도서 검색 중 오류가 발생했습니다." />}
 
