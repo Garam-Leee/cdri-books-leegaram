@@ -1,58 +1,13 @@
 import axios from "axios";
 
 import client from "@/api/client";
+import { createApiError, mapKakaoErrorType } from "@/api/error";
 import type { Book, BookSearchResponse, SearchBooksParams } from "@/types/book";
 
 type KakaoErrorResponse = {
   code?: number;
   msg?: string;
   message?: string;
-};
-
-export interface BookApiError extends Error {
-  status?: number;
-  code?: number;
-  type: "auth" | "quota" | "invalid-request" | "network" | "unknown";
-}
-
-const createBookApiError = ({
-  message,
-  status,
-  code,
-  type,
-}: {
-  message: string;
-  status?: number;
-  code?: number;
-  type: BookApiError["type"];
-}) => {
-  const error = new Error(message) as BookApiError;
-
-  error.status = status;
-  error.code = code;
-  error.type = type;
-
-  return error;
-};
-
-const getErrorType = (status?: number, code?: number): BookApiError["type"] => {
-  if (status === 401 || code === -401 || code === -3 || code === -5) {
-    return "auth";
-  }
-
-  if (code === -10 || code === -11) {
-    return "quota";
-  }
-
-  if (code === -2 || code === -6 || code === -9) {
-    return "invalid-request";
-  }
-
-  if (status && status >= 500) {
-    return "network";
-  }
-
-  return "unknown";
 };
 
 const normalizeBook = (book: Book): Book => ({
@@ -92,7 +47,7 @@ export const searchBooks = async ({
   const apiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
 
   if (!apiKey) {
-    throw createBookApiError({
+    throw createApiError({
       message: "카카오 REST API Key가 설정되지 않았습니다.",
       status: 401,
       type: "auth",
@@ -115,19 +70,25 @@ export const searchBooks = async ({
     if (axios.isAxiosError<KakaoErrorResponse>(error)) {
       const status = error.response?.status;
       const code = error.response?.data?.code;
+      const isNetworkError =
+        !error.response ||
+        error.code === "ERR_NETWORK" ||
+        error.code === "ECONNABORTED" ||
+        error.message?.includes("Network Error");
 
-      throw createBookApiError({
-        message:
-          error.response?.data?.msg ??
-          error.response?.data?.message ??
-          "도서 정보를 불러오지 못했습니다.",
+      throw createApiError({
+        message: isNetworkError
+          ? "네트워크 연결이 불안정합니다. 인터넷 연결을 확인한 후 다시 시도해 주세요."
+          : error.response?.data?.msg ??
+            error.response?.data?.message ??
+            "도서 정보를 불러오지 못했습니다.",
         status,
         code,
-        type: getErrorType(status, code),
+        type: isNetworkError ? "network" : mapKakaoErrorType(code, status),
       });
     }
 
-    throw createBookApiError({
+    throw createApiError({
       message: "알 수 없는 오류가 발생했습니다.",
       type: "unknown",
     });
