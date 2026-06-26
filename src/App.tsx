@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Header from "@/components/common/Header";
 import HomePage from "@/pages/HomePage";
+import NotFoundPage from "@/pages/NotFoundPage";
 import WishPage from "@/pages/WishPage";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/wish" element={<WishPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Container>
     </BrowserRouter>
@@ -23,5 +25,5 @@ function App() {
 export default App;
 
 const Container = styled.div`
-  min-width: 960px;
+  width: 100%;
 `;

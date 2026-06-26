@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 import NoResultBookImage from "@/assets/images/img-noresult-book.png";
@@ -45,7 +46,18 @@ export default function BookList({
 
   return (
     <>
-      <List>
+      <List
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.03,
+            },
+          },
+        }}
+      >
         {books.map((book) => (
           <BookCard
             key={book.isbn || book.url}
@@ -60,9 +72,10 @@ export default function BookList({
   );
 }
 
-const List = styled.ul`
+const List = styled(motion.ul)`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const ObservedArea = styled.div`

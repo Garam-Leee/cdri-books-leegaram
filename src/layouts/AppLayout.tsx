@@ -16,8 +16,14 @@ export default function AppLayout({ title, children }: AppLayoutProps) {
 
 const Container = styled.main`
   width: 960px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 80px 0 240px;
+
+  @media (max-width: 960px) {
+    width: 100%;
+    padding: 80px 16px 240px;
+  }
 `;
 
 const Title = styled.h2(({ theme }) => ({

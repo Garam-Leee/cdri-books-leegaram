@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 
 import DeleteIcon from "@/assets/icons/ic-delete.svg";
 import { SEARCH_HISTORY_STORAGE_KEY } from "@/constants/search";
@@ -31,7 +32,13 @@ export default function SearchHistory({
   };
 
   return (
-    <Container onMouseDown={(event) => event.preventDefault()}>
+    <Container 
+      onMouseDown={(event) => event.preventDefault()}
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -4 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+    >
       {histories.map((history) => (
         <Item key={history}>
           <Keyword type="button" onClick={() => onSelect(history)}>
@@ -42,6 +49,8 @@ export default function SearchHistory({
             type="button"
             aria-label={`${history} 검색 기록 삭제`}
             onClick={(event) => handleDelete(event, history)}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.12 }}
           >
             <DeleteImage src={DeleteIcon} alt="" aria-hidden="true" />
           </DeleteButton>
@@ -51,7 +60,7 @@ export default function SearchHistory({
   );
 }
 
-const Container = styled.ul(({ theme }) => ({
+const Container = styled(motion.ul)(({ theme }) => ({
   position: "absolute",
   top: "100%",
   left: 0,
@@ -85,7 +94,7 @@ const Keyword = styled.button(({ theme }) => ({
   },
 }));
 
-const DeleteButton = styled.button`
+const DeleteButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
