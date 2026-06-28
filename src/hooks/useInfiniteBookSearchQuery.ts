@@ -9,6 +9,10 @@ interface UseInfiniteBookSearchQueryParams {
   target?: SearchTarget;
 }
 
+const isApiError = (error: unknown): error is ApiError => {
+  return error instanceof Error && "type" in error;
+};
+
 export default function useInfiniteBookSearchQuery({
   query,
   target,
@@ -23,7 +27,6 @@ export default function useInfiniteBookSearchQuery({
       }),
 
     enabled: query.trim().length > 0,
-
     initialPageParam: 1,
 
     getNextPageParam: (lastPage, pages) => {
@@ -36,23 +39,17 @@ export default function useInfiniteBookSearchQuery({
     },
 
     retry: (failureCount, error) => {
-      const apiError = error as ApiError;
-
-      // 네트워크나 인증 오류는 재시도하지 않음
-      if (apiError?.type === "network" || apiError?.type === "auth") {
-        return false;
+      if (isApiError(error)) {
+        if (error.type === "network" || error.type === "auth") {
+          return false;
+        }
       }
 
-      // 나머지는 최대 2번 재시도
       return failureCount < 2;
     },
 
     retryDelay: 500,
-
-    // 데이터를 항상 stale로 간주 (캐시를 사용하되, 항상 백그라운드에서 재검증)
     staleTime: 0,
-
-    // 네트워크 모드: 항상 쿼리를 실행하고, 실패하면 에러 반환
     networkMode: "always",
   });
 }

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { getBookSearchErrorMessage } from "@/api/error";
@@ -19,14 +19,18 @@ const isValidSearchTarget = (target: string | null): target is SearchTarget => {
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialQuery = searchParams.get("query") ?? "";
-  const initialTarget = searchParams.get("target");
+  const [keyword, setKeyword] = useState("");
+  const [submittedKeyword, setSubmittedKeyword] = useState("");
+  const [target, setTarget] = useState<SearchTarget | undefined>();
 
-  const [keyword, setKeyword] = useState(initialQuery);
-  const [submittedKeyword, setSubmittedKeyword] = useState(initialQuery);
-  const [target, setTarget] = useState<SearchTarget | undefined>(
-    isValidSearchTarget(initialTarget) ? initialTarget : undefined,
-  );
+  useEffect(() => {
+    const nextQuery = searchParams.get("query") ?? "";
+    const nextTarget = searchParams.get("target");
+
+    setKeyword(nextQuery);
+    setSubmittedKeyword(nextQuery);
+    setTarget(isValidSearchTarget(nextTarget) ? nextTarget : undefined);
+  }, [searchParams]);
 
   const {
     data,
@@ -41,9 +45,14 @@ export default function HomePage() {
     target,
   });
 
-  const books = data?.pages.flatMap((page) => page.documents) ?? [];
-  const totalCount = error ? 0 : (data?.pages[0]?.meta.total_count ?? 0);
+  const books = useMemo(
+    () => data?.pages.flatMap((page) => page.documents) ?? [],
+    [data]
+  );
+
+  const totalCount = error ? 0 : data?.pages[0]?.meta.total_count ?? 0;
   const isInitialLoading = isLoading || (isFetching && books.length === 0);
+  const hasSearched = submittedKeyword.trim().length > 0;
 
   const handleSearch = ({
     keyword,
@@ -55,9 +64,6 @@ export default function HomePage() {
     const trimmedKeyword = keyword.trim();
     if (!trimmedKeyword) return;
 
-    setSubmittedKeyword(trimmedKeyword);
-    setTarget(target);
-
     const nextParams = new URLSearchParams();
     nextParams.set("query", trimmedKeyword);
 
@@ -67,8 +73,6 @@ export default function HomePage() {
 
     setSearchParams(nextParams);
   };
-
-  const hasSearched = submittedKeyword.trim().length > 0;
 
   return (
     <AppLayout title={NAV_ITEMS.search.name}>
