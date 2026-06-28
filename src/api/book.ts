@@ -10,8 +10,7 @@ type KakaoErrorResponse = {
   message?: string;
 };
 
-const normalizeBook = (book: Book): Book => ({
-  ...book,
+const normalizeBook = (book: Partial<Book>): Book => ({
   title: book.title ?? "",
   contents: book.contents ?? "",
   url: book.url ?? "",
@@ -27,7 +26,7 @@ const normalizeBook = (book: Book): Book => ({
 });
 
 const normalizeBookSearchResponse = (
-  response: BookSearchResponse
+  response: Partial<BookSearchResponse>
 ): BookSearchResponse => ({
   meta: {
     total_count: response.meta?.total_count ?? 0,
@@ -43,7 +42,7 @@ export const searchBooks = async ({
   size = 10,
   sort = "accuracy",
   target,
-}: SearchBooksParams) => {
+}: SearchBooksParams): Promise<BookSearchResponse> => {
   const apiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
 
   if (!apiKey) {
@@ -70,6 +69,7 @@ export const searchBooks = async ({
     if (axios.isAxiosError<KakaoErrorResponse>(error)) {
       const status = error.response?.status;
       const code = error.response?.data?.code;
+
       const isNetworkError =
         !error.response ||
         error.code === "ERR_NETWORK" ||

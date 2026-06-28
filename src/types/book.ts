@@ -1,3 +1,5 @@
+import type { SearchTarget } from "@/types/search";
+
 export interface Book {
   title: string;
   contents: string;
@@ -28,5 +30,5 @@ export interface SearchBooksParams {
   page?: number;
   size?: number;
   sort?: "accuracy" | "latest";
-  target?: "title" | "isbn" | "publisher" | "person";
+  target?: SearchTarget;
 }
