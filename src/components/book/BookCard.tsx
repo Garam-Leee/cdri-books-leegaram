@@ -254,7 +254,7 @@ const Title = styled.p(({ theme }) => ({
 
 const Authors = styled.p(({ theme }) => ({
   marginLeft: "16px",
-  color: theme.colors.text.subtitle,
+  color: theme.colors.text.secondary,
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -308,6 +308,7 @@ const PriceArea = styled.div<{ isOpen: boolean }>(({ isOpen }) => ({
   flexDirection: "column",
   alignItems: "flex-end",
   marginRight: isOpen ? 0 : "56px",
+  gap: isOpen ? "8px" : 0,
 }));
 
 const PriceRow = styled.p`

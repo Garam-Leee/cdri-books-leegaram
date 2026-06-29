@@ -107,5 +107,4 @@ const DeleteImage = styled.img`
   width: 16px;
   height: 16px;
   display: block;
-  opacity: 0.5;
 `;

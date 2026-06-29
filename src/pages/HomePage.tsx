@@ -19,18 +19,26 @@ const isValidSearchTarget = (target: string | null): target is SearchTarget => {
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [keyword, setKeyword] = useState("");
-  const [submittedKeyword, setSubmittedKeyword] = useState("");
-  const [target, setTarget] = useState<SearchTarget | undefined>();
+  // URL에서 직접 검색 파라미터 읽기 (derived state)
+  const queryFromUrl = searchParams.get("query") ?? "";
+  const targetFromUrl = searchParams.get("target");
+  
+  const submittedKeyword = queryFromUrl;
+  const target = isValidSearchTarget(targetFromUrl) ? targetFromUrl : undefined;
 
+  // 사용자 입력용 로컬 state (URL과 동기화)
+  const [keyword, setKeyword] = useState(queryFromUrl);
+
+  // URL이 변경되면 입력 필드도 동기화 (뒤로가기 등)
+  // URL은 외부 시스템이므로 이 패턴은 정당함
   useEffect(() => {
-    const nextQuery = searchParams.get("query") ?? "";
-    const nextTarget = searchParams.get("target");
-
-    setKeyword(nextQuery);
-    setSubmittedKeyword(nextQuery);
-    setTarget(isValidSearchTarget(nextTarget) ? nextTarget : undefined);
-  }, [searchParams]);
+    if (keyword !== queryFromUrl) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setKeyword(queryFromUrl);
+    }
+    // keyword는 의도적으로 제외 (무한 루프 방지)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryFromUrl]);
 
   const {
     data,
@@ -107,7 +115,8 @@ export default function HomePage() {
 
 const ResultCount = styled.p(({ theme }) => ({
   color: theme.colors.text.primary,
-  ...theme.typography.body2,
+  ...theme.typography.caption,
+  marginBottom: "36px",
 }));
 
 const Count = styled.span(({ theme }) => ({

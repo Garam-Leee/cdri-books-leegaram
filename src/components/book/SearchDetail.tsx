@@ -243,7 +243,7 @@ const TargetOption = styled.button(({ theme }) => ({
   backgroundColor: "transparent",
   color: theme.colors.text.subtitle,
   transition: "background-color 160ms ease",
-  ...theme.typography.caption,
+  ...theme.typography.body2 ,
 
   "&:hover": {
     backgroundColor: theme.colors.palette.lightGray,
@@ -282,7 +282,7 @@ const SubmitButton = styled.button(({ theme }) => ({
   borderRadius: "8px",
   backgroundColor: theme.colors.palette.primary,
   color: theme.colors.palette.white,
-  ...theme.typography.caption,
+  ...theme.typography.body2,
 
   "&:disabled": {
     backgroundColor: theme.colors.palette.gray,

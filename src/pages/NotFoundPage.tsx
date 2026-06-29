@@ -77,10 +77,10 @@ const Title = styled.h2(({ theme }) => ({
 }));
 
 const Message = styled.p(({ theme }) => ({
+  ...theme.typography.body1,
   marginBottom: "32px",
   color: theme.colors.text.secondary,
   lineHeight: 1.6,
-  ...theme.typography.body1,
 }));
 
 const Countdown = styled.span(({ theme }) => ({
