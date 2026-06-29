@@ -29,7 +29,7 @@ export default function Header() {
 const Container = styled.header`
   display: flex;
   align-items: center;
-  padding: 24px;
+  padding: 24px 160px;
 
   @media (max-width: 768px) {
     flex-direction: column;

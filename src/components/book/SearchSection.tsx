@@ -151,7 +151,7 @@ export default function SearchSection({
 const Container = styled.section`
   width: 568px;
   max-width: 100%;
-  padding-bottom: 20px;
+  padding-bottom: 24px;
 `;
 
 const SearchBox = styled.div`

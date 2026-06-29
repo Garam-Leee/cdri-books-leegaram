@@ -27,7 +27,7 @@ const Container = styled.main`
 `;
 
 const Title = styled.h2(({ theme }) => ({
-  marginBottom: "20px",
+  marginBottom: "16px",
   color: theme.colors.text.primary,
   ...theme.typography.title2,
 }));
